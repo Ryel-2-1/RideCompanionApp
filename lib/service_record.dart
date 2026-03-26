@@ -6,7 +6,28 @@ void showServiceRecordSheet(BuildContext context) {
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (context) {
-      return Container(
+      return const ServiceRecordForm();
+    },
+  );
+}
+
+class ServiceRecordForm extends StatefulWidget {
+  const ServiceRecordForm({super.key});
+
+  @override
+  State<ServiceRecordForm> createState() => _ServiceRecordFormState();
+}
+
+class _ServiceRecordFormState extends State<ServiceRecordForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Container(
         height: MediaQuery.of(context).size.height * 0.85,
         padding: const EdgeInsets.only(top: 32.0, left: 24.0, right: 24.0, bottom: 24.0),
         decoration: const BoxDecoration(
@@ -16,90 +37,69 @@ void showServiceRecordSheet(BuildContext context) {
             topRight: Radius.circular(24),
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Ride Companion',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      'Yamaha MT-07 • 2023',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF0EA5E9).withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.build,
-                    color: Color(0xFF38BDF8),
-                    size: 20,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            const Text(
-              'New Service Record',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text('Service Title', style: TextStyle(color: Colors.grey, fontSize: 12)),
-            const SizedBox(height: 8),
-            TextField(
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'e.g. Oil & Filter Change',
-                hintStyle: const TextStyle(color: Colors.grey),
-                filled: true,
-                fillColor: const Color(0xFF020617),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF1E293B)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF1E293B)),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('DATE', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Ride Companion',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                'Yamaha MT 07 2023',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF0EA5E9).withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.build,
+                              color: Color(0xFF38BDF8),
+                              size: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      const Text(
+                        'New Service Record',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text('Service Title', style: TextStyle(color: Colors.grey, fontSize: 12)),
                       const SizedBox(height: 8),
-                      TextField(
+                      TextFormField(
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'mm/dd/yyyy',
-                          hintStyle: const TextStyle(color: Colors.white),
-                          suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey, size: 20),
+                          hintText: 'e.g. Oil & Filter Change',
+                          hintStyle: const TextStyle(color: Colors.grey),
                           filled: true,
                           fillColor: const Color(0xFF020617),
                           border: OutlineInputBorder(
@@ -111,21 +111,101 @@ void showServiceRecordSheet(BuildContext context) {
                             borderSide: const BorderSide(color: Color(0xFF1E293B)),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a title';
+                          }
+                          return null;
+                        },
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('MILEAGE (KM)', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      const SizedBox(height: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('DATE', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                const SizedBox(height: 8),
+                                TextFormField(
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: 'mm/dd/yyyy',
+                                    hintStyle: const TextStyle(color: Colors.white),
+                                    suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey, size: 20),
+                                    filled: true,
+                                    fillColor: const Color(0xFF020617),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Color(0xFF1E293B)),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Color(0xFF1E293B)),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Required';
+                                    }
+                                    final dateRegExp = RegExp(r'^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$');
+                                    if (!dateRegExp.hasMatch(value)) {
+                                      return 'Use mm/dd/yyyy';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('MILEAGE (KM)', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                const SizedBox(height: 8),
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    hintText: '4120',
+                                    hintStyle: const TextStyle(color: Colors.grey),
+                                    filled: true,
+                                    fillColor: const Color(0xFF020617),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Color(0xFF1E293B)),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(color: Color(0xFF1E293B)),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Required';
+                                    }
+                                    if (int.tryParse(value) == null) {
+                                      return 'Numbers only';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('NOTES', style: TextStyle(color: Colors.grey, fontSize: 12)),
                       const SizedBox(height: 8),
-                      TextField(
+                      TextFormField(
+                        maxLines: 4,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
-                          hintText: '4120',
+                          hintText: 'Describe the work done...',
                           hintStyle: const TextStyle(color: Colors.grey),
                           filled: true,
                           fillColor: const Color(0xFF020617),
@@ -139,59 +219,40 @@ void showServiceRecordSheet(BuildContext context) {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Text('NOTES', style: TextStyle(color: Colors.grey, fontSize: 12)),
-            const SizedBox(height: 8),
-            TextField(
-              maxLines: 4,
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                hintText: 'Describe the work done...',
-                hintStyle: const TextStyle(color: Colors.grey),
-                filled: true,
-                fillColor: const Color(0xFF020617),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF1E293B)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: Color(0xFF1E293B)),
-                ),
               ),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0EA5E9),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0EA5E9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Save Record',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
+                  child: const Text(
+                    'Save Record',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      );
-    },
-  );
+      ),
+    );
+  }
 }
